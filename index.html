@@ -244,7 +244,7 @@
     const who = (it.reserved || "").trim();
     if (who) {
       item.classList.add("reserved");
-      badge.textContent = "🎁 Reservado" + (who.toLowerCase() === "alguém" ? "" : " por " + who);
+      badge.textContent = "🎁 Reservado";
       rbtn.textContent = "Cancelar reserva";
     } else {
       item.classList.remove("reserved");
@@ -258,12 +258,10 @@
     const who = (it.reserved || "").trim();
     let value;
     if (who) {
-      if (!confirm(`"${it.name}" está reservado${who.toLowerCase()==="alguém" ? "" : " por " + who}. Cancelar a reserva?`)) return;
+      if (!confirm(`"${it.name}" está reservado. Cancelar a reserva?`)) return;
       value = "";
     } else {
-      let name = prompt("O teu nome (para os outros saberem que já está tratado):");
-      if (name === null) return;
-      value = name.trim() || "Alguém";
+      value = "sim";
     }
     it.reserved = value;
     paintReserve(it, item, badge, rbtn); // optimistic

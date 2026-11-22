@@ -80,7 +80,7 @@
   .grid { columns: 240px; column-gap: 20px; }
   @media (max-width: 520px) { .grid { columns: 2; column-gap: 12px; } }
 
-  .item { break-inside: avoid; margin-bottom: 26px; display: block; }
+  .item { break-inside: avoid; margin-bottom: 26px; display: block; cursor: pointer; }
   .item .imgtile {
     background: var(--tile); border-radius: var(--radius); overflow: hidden;
     line-height: 0; transition: transform .18s ease, box-shadow .18s ease;
@@ -91,6 +91,9 @@
   }
   .item .imgtile.ph span { font-size: 44px; opacity: .4; }
   .item:hover .imgtile { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,.10); }
+  .item:hover .title { color: var(--accent); }
+  .item .meta { transition: transform .18s ease; }
+  .item:hover .meta { transform: translateY(-3px); }
 
   .item .meta { padding: 10px 4px 0; }
   .item .title { font-size: .95rem; font-weight: 500; line-height: 1.35; margin: 0 0 6px; }

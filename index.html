@@ -103,6 +103,27 @@
   .item .price { font-size: .92rem; font-weight: 700; }
   .item .note { color: var(--ink-soft); font-size: .85rem; margin: 5px 0 0; }
 
+  .item .reserve {
+    margin-top: 10px; width: 100%; border: 1px solid var(--tile-line);
+    background: var(--card); color: var(--ink); font-family: inherit;
+    font-weight: 600; font-size: .85rem; padding: 8px 10px; border-radius: 999px;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease;
+  }
+  .item .reserve:hover { background: var(--pill); }
+  .item .badge {
+    display: none; margin-top: 8px; font-size: .78rem; font-weight: 700;
+    color: #2e7d32; background: #e7f6e9; padding: 3px 9px; border-radius: 999px;
+    width: fit-content;
+  }
+  .item.reserved .imgtile { opacity: .5; filter: grayscale(.4); }
+  .item.reserved .title { color: var(--ink-soft); text-decoration: line-through; }
+  .item.reserved .price-row { opacity: .6; }
+  .item.reserved .badge { display: inline-block; }
+  .item.reserved .reserve { background: var(--pill); color: var(--ink-soft); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .item .badge { color: #a5e0ad; background: #1f3322; }
+  }
+
   .state { text-align: center; padding: 70px 20px; color: var(--ink-soft); font-size: 1.05rem; }
   .state .emoji { font-size: 40px; display: block; margin-bottom: 12px; }
 
@@ -147,6 +168,10 @@
   const SHEET_ID = "12Fo9ZaevmDxr5uzhAy0UGL2nLAoYMubpwA9esuPZEvw";
   const SHEET_NAME = "Sheet1";
   const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+  // Google Apps Script Web App URL that writes reservations back to the Sheet.
+  // Paste the /exec URL from your deployment here (leave "" to disable reserving).
+  const RESERVE_URL = "";
 
   // Offline fallback (used only if the live Sheet fetch is blocked, e.g. in a preview sandbox).
   const FALLBACK_ITEMS = [
@@ -207,10 +232,54 @@
     navigator.clipboard?.writeText(url).then(showToast).catch(()=>{});
   }
   let toastT;
-  function showToast() {
+  function showToast(msg) {
     const t = document.getElementById("toast");
+    if (msg) t.textContent = msg;
     t.classList.add("show"); clearTimeout(toastT);
-    toastT = setTimeout(() => t.classList.remove("show"), 1800);
+    toastT = setTimeout(() => t.classList.remove("show"), 2000);
+  }
+
+  // ---- Reservations ----
+  function paintReserve(it, item, badge, rbtn) {
+    const who = (it.reserved || "").trim();
+    if (who) {
+      item.classList.add("reserved");
+      badge.textContent = "🎁 Reservado" + (who.toLowerCase() === "alguém" ? "" : " por " + who);
+      rbtn.textContent = "Cancelar reserva";
+    } else {
+      item.classList.remove("reserved");
+      badge.textContent = "";
+      rbtn.textContent = "Reservar 🎁";
+    }
+  }
+
+  function toggleReserve(it, item, badge, rbtn) {
+    if (!RESERVE_URL) { alert("As reservas ainda não estão ativas."); return; }
+    const who = (it.reserved || "").trim();
+    let value;
+    if (who) {
+      if (!confirm(`"${it.name}" está reservado${who.toLowerCase()==="alguém" ? "" : " por " + who}. Cancelar a reserva?`)) return;
+      value = "";
+    } else {
+      let name = prompt("O teu nome (para os outros saberem que já está tratado):");
+      if (name === null) return;
+      value = name.trim() || "Alguém";
+    }
+    it.reserved = value;
+    paintReserve(it, item, badge, rbtn); // optimistic
+    postReserve(it, value);
+    showToast(value ? "Reservado ✓" : "Reserva cancelada");
+  }
+
+  function postReserve(it, value) {
+    try {
+      fetch(RESERVE_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ url: (it.amazon_url||"").trim(), title: (it.name||"").trim(), reserved: value }),
+      }).catch(() => {});
+    } catch (e) { console.error(e); }
   }
 
   function render(items) {
@@ -251,6 +320,16 @@
         meta.appendChild(pr);
       }
       if (it.note && it.note.trim()) meta.appendChild(el("p", "note", esc(it.note)));
+
+      // Reservation: badge + button
+      const badge = el("span", "badge", "");
+      meta.appendChild(badge);
+      const rbtn = el("button", "reserve", "");
+      rbtn.type = "button";
+      rbtn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleReserve(it, item, badge, rbtn); });
+      meta.appendChild(rbtn);
+      paintReserve(it, item, badge, rbtn);
+
       item.appendChild(meta);
       grid.appendChild(item);
     }
@@ -266,13 +345,14 @@
       if (!rows.length) { render([]); return; }
       const header = rows[0].map(h => h.trim().toLowerCase());
       const col = n => header.indexOf(n);
-      const iN = col("name"), iI = col("image_url"), iA = col("amazon_url"), iP = col("price"), iNote = col("note");
+      const iN = col("name"), iI = col("image_url"), iA = col("amazon_url"), iP = col("price"), iNote = col("note"), iR = col("reserved");
       const items = rows.slice(1).map(r => ({
         name: iN>=0 ? r[iN] : r[0],
         image_url: iI>=0 ? r[iI] : "",
         amazon_url: iA>=0 ? r[iA] : "",
         price: iP>=0 ? r[iP] : "",
         note: iNote>=0 ? r[iNote] : "",
+        reserved: iR>=0 ? r[iR] : "",
       })).filter(it => (it.name||"").trim() !== "");
       render(items);
     } catch (e) {

@@ -150,7 +150,7 @@
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">Para eu sempre adorar</p>
+    <p class="eyebrow" id="eyebrow">Para eu sempre adorar</p>
     <h1>A minha wishlist</h1>
     <button class="share" onclick="sharePage()">Partilhar lista</button>
   </header>
@@ -284,6 +284,9 @@
     const grid = document.getElementById("grid"), state = document.getElementById("state");
     grid.innerHTML = "";
     items = [...items].sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+    const cheapest = items.find(it => isFinite(parsePrice(it.price)));
+    const eb = document.getElementById("eyebrow");
+    if (eb && cheapest) eb.textContent = "Prendas desde " + String(cheapest.price).trim();
     if (!items.length) {
       state.innerHTML = '<span class="emoji">🫙</span>A lista ainda está vazia.';
       state.hidden = false; grid.hidden = true; return;

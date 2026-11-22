@@ -146,17 +146,18 @@
 
   // Offline fallback (used only if the live Sheet fetch is blocked, e.g. in a preview sandbox).
   const FALLBACK_ITEMS = [
-    { name: "Xanthan Gum em pó 500g — Food Bites", image_url: "", amazon_url: "", price: "€17,77", note: "Para cozinha molecular e mixologia" },
-    { name: "Chef Pomodoro Pá para Pizza 30x35cm", image_url: "", amazon_url: "", price: "€21,23", note: "Alumínio · promo Black Friday" },
-    { name: "Faber-Castell Pitt Pastel — 60 lápis", image_url: "", amazon_url: "", price: "€115,30", note: "Caixa de metal, cores pastel" },
-    { name: "Victoria Frigideira Ferro Fundido 30cm", image_url: "", amazon_url: "", price: "€48,47", note: "Curada, sem PTFE/PFOA" },
-    { name: "Matsato Faca de Chef 16cm", image_url: "", amazon_url: "", price: "€34,55", note: "Cabo de faia, full-tang" },
-    { name: "Chef Pomodoro Pizza Steel 41x34cm", image_url: "", amazon_url: "", price: "€55,90", note: "Aço carbono · preciso de 2" },
-    { name: "Sondiko Maçarico de Cozinha recarregável", image_url: "", amazon_url: "", price: "€18,29", note: "Preto/branco · gás não incluído" },
-    { name: "Kitchenatics Grelha de arrefecimento/forno", image_url: "", amazon_url: "", price: "€41,28", note: "Inox, 25x38cm" },
-    { name: "Bosch UniversalTemp Termómetro infravermelho", image_url: "", amazon_url: "", price: "€52,85", note: "-30 a +500°C" },
-    { name: "Tramontina Tacho Tri-Ply inox 3,5L", image_url: "", amazon_url: "", price: "€57,16", note: "Tri-Ply · promo Black Friday" },
-    { name: "Tramontina Tacho Tri-Ply inox 20cm 3,1L", image_url: "", amazon_url: "", price: "€73,43", note: "Tri-Ply com tampa" },
+    { name: "SimpleThings Bracelete desportiva para Fitbit", image_url: "https://m.media-amazon.com/images/I/41MmYAT1BdL.jpg", amazon_url: "https://www.amazon.es/dp/B0H8258YWQ", price: "", note: "Nylon" },
+    { name: "Xanthan Gum em pó 500g — Food Bites", image_url: "https://m.media-amazon.com/images/I/31kvyJyeEUL.jpg", amazon_url: "https://www.amazon.es/dp/B0CKTS13ND", price: "€17,77", note: "Para cozinha molecular e mixologia" },
+    { name: "Chef Pomodoro Pá para Pizza 30x35cm", image_url: "https://m.media-amazon.com/images/I/31G22hqeavL.jpg", amazon_url: "https://www.amazon.es/dp/B01NBX7GOB", price: "€21,23", note: "Alumínio · promo Black Friday" },
+    { name: "Faber-Castell Pitt Pastel — 60 lápis", image_url: "https://m.media-amazon.com/images/I/41kyHQAjImL.jpg", amazon_url: "https://www.amazon.es/dp/B000LY5AF0", price: "€115,30", note: "Caixa de metal, cores pastel" },
+    { name: "Victoria Frigideira Ferro Fundido 30cm", image_url: "https://m.media-amazon.com/images/I/31-wXbMPAxL.jpg", amazon_url: "https://www.amazon.es/dp/B01726HD72", price: "€48,47", note: "Curada, sem PTFE/PFOA" },
+    { name: "Matsato Faca de Chef 16cm", image_url: "https://m.media-amazon.com/images/I/41jXfb854ML.jpg", amazon_url: "https://www.amazon.es/dp/B0FN84958F", price: "€34,55", note: "Cabo de faia, full-tang" },
+    { name: "Chef Pomodoro Pizza Steel 41x34cm", image_url: "https://m.media-amazon.com/images/I/61EindUmjfL.jpg", amazon_url: "https://www.amazon.es/dp/B0C2D47D9Z", price: "€55,90", note: "Aço carbono · preciso de 2" },
+    { name: "Sondiko Maçarico de Cozinha recarregável", image_url: "https://m.media-amazon.com/images/I/31MYr6itu2L.jpg", amazon_url: "https://www.amazon.es/dp/B08Y5M5V3X", price: "€18,29", note: "Preto/branco · gás não incluído" },
+    { name: "Kitchenatics Grelha de arrefecimento/forno", image_url: "https://m.media-amazon.com/images/I/51WB5FT1zSL.jpg", amazon_url: "https://www.amazon.es/dp/B01DOJIFTQ", price: "€41,28", note: "Inox, 25x38cm" },
+    { name: "Bosch UniversalTemp Termómetro infravermelho", image_url: "https://m.media-amazon.com/images/I/41oPdzn6H8L.jpg", amazon_url: "https://www.amazon.es/dp/B0CFVZQFZ5", price: "€52,85", note: "-30 a +500°C" },
+    { name: "Tramontina Tacho inox Grain 3,5L", image_url: "https://m.media-amazon.com/images/I/21SzVnZMSBL.jpg", amazon_url: "https://www.amazon.es/dp/B088MFRKLX", price: "€57,16", note: "Promo Black Friday" },
+    { name: "Tramontina Tacho Tri-Ply Grain 20cm 3,1L", image_url: "https://m.media-amazon.com/images/I/21672vv+g1L.jpg", amazon_url: "https://www.amazon.es/dp/B098WY3MP5", price: "€73,43", note: "Tri-Ply com tampa" },
   ];
 
   function parseCSV(text) {
